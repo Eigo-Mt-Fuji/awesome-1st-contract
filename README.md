@@ -5,7 +5,7 @@
 - 「都道府県NFT」を作り出すスマートコントラクトを開発する
   - ダミーの「都道府県画像」を関連付けたNFTアート
     - 都道府県画像は以下の東京都の画像とする
-      - ![img(./img/tokyo.png)]
+      - ![img](./img/tokyo.png)
 
 - スマートコントラクトはイーサリアムのERC721に準拠する
   - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
