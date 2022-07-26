@@ -93,68 +93,11 @@
 - とりあえず、サンプルに沿って「mintNFT」関数を実装した。これでNFTの発行ができそうだが、他にどのようなイベントが必要？
   - この辺、自由に実装するやつか?
 
-## 拡張機能インストール
+## 備考: 拡張機能インストール
 
 - JuanBlanco.solidity v0.0.139
 
-## OpenZeppelin contract
-
-- ERC721 NFT Token Standard
-  - ERC721 token with storage based token URI management.
-    - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
-      - function
-          - balanceOf オーナーの残高を確認する Count all NFTs assigned to an owner
-              - `function balanceOf(address _owner) external view returns (uint256);`
-          - ownerOf トークンのオーナーのイーサリアムアドレスを確認する - Find the owner of an NFT
-              - `function ownerOf(uint256 _tokenId) external view returns (address);`
-          - safeTransferFrom トークンをfrom->toに安全に転送する(dataペイロード付き) - Transfers the ownership of an NFT from one address to another address
-              - function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable;
-          - safeTransferFrom トークンをfrom->toに安全に転送する Transfers the ownership of an NFT from one address to another address
-              - function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
-          - transferFrom トークンをfrom->toに転送する Transfer ownership of an NFT 
-              - function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
-          - approve _approvedアドレスのユーザへのトークン_tokenIdの受け渡しを承認する Change or reaffirm the approved address for an NFT
-              - function approve(address _approved, uint256 _tokenId) external payable;
-          - setApprovalForAll _operatorアドレスをもつアカウントに全てのアセット管理を許可する(もしくは禁止する)へのトークン受け渡しを無条件で承認/否認する / Enable or disable approval for a third party ("operator") to manage all of `msg.sender`'s assets
-            - thrid party operator とは?
-              - コントラクトアカウントのイーサリアムアドレス
-          - getApproved トークン_tokenIdの承認済みイーサリアムアドレスを返却する
-              - `function getApproved(uint256 _tokenId) external view returns (address);`
-          - isApprovedForAll オーナー_ownerから_operatorアドレスを持つユーザを承認済か否かを確認する
-              - `function isApprovedForAll(address _owner, address _operator) external view returns (bool);`
-          - transferFrom トークンをfrom->toに転送する
-              - `function transferFrom(address _from, address _to, uint256 _tokenId) external payable;`
-          - approve _approvedアドレスのユーザへのトークン_tokenIdの受け渡しを承認する
-              - `function approve(address _approved, uint256 _tokenId) external payable;`
-                - Approves another address to transfer the given token ID
-                - There can only be one approved address per token at a given time. 
-                - Can only be called by the token owner or an approved operator.
-      - function(metadata extension, OPTIONAL for ERC-721 smart contracts)
-          - name 
-              - `function name() external view returns (string _name)`
-                  - A descriptive name for a collection of NFTs in this contract
-          - symbol
-              - `function symbol() external view returns (string _symbol)`
-                  - An abbreviated name for NFTs in this contract
-          - tokenURI
-              - `function tokenURI(uint256 _tokenId) external view returns (string)`
-                  - A distinct Uniform Resource Identifier (URI) for a given asset.
-      - event
-          - Transfer
-              - `event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);`
-              - emits when NFTs are created (`from` == 0) and destroyed (`to` == 0). Exception: during contract creation, any number of NFTs may be created and assigned without emitting Transfer. At the time of any transfer, the approved address for that NFT (if any) is reset to none.
-
-          - Approval
-              - `event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);`
-              - emits when the approved address for an NFT is changed or reaffirmed.
-                  - The zero address indicates there is no approved address.　When a Transfer event emits, this also indicates that the approved address for that NFT (if any) is reset to none.
-
-          - ApprovalForAll
-              - `event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);`
-              - emits when an operator is enabled or disabled for an owner.
-                  - The operator can manage all NFTs of the owner.
-
-## パッケージインストール
+## 備考: パッケージインストール
 
 ```
 npm install --save-dev hardhat
