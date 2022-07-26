@@ -44,15 +44,54 @@
       - emits when an operator is enabled or disabled for an owner.
           - The operator can manage all NFTs of the owner.
 
-## パッケージインストール
 
-```
-npm install --save-dev hardhat
-```
+## 検討課題
 
-```
-npm install @openzeppelin/contracts
-```
+- ERC721で実際どう実装すればいいのか、いまいち整理がついてない。
+  - 参考にする
+    - https://ethereum.org/en/developers/docs/standards/tokens/erc-721/
+    - https://ethereumnavi.com/2021/11/09/contract-study-2-solidity-erc721/
+
+  - safeTransferFromとtransferFromの違い is 何
+  　- OpenZeppelinのコードを読んだ
+      - safeTransferFromの方は
+        - 転送先がコントラクト、かつ、トークンIERC721Receverインターフェースを実装してるコントラクトの場合
+          - トークンの転送を受理するか検査できる（拒否することもできる） →GOXってヤツ
+            - onERC721Receivedという関数を実装し、トークン転送を受理するか検査
+              - この関数は、「function selector」を返す必要があるという仕様
+                - [function selectorとは](https://ethereum.stackexchange.com/questions/72363/what-is-a-function-selector)
+                - [function selectorとは2](https://y-nakajo.hatenablog.com/entry/2018/09/16/154612#Function-Selector)
+                  - function selector allows you to perform dynamic invocation of a function
+                  - 外部から関数を呼び出すときに、関数の実態を探し出し実行する処理のこと
+                  - Function Selectorはコンパイル後に生成されるopcodesの先頭に近い位置に配置されます
+                  - 関数呼び出し時のコールデータの最初の4バイトは呼び出す関数を指定しています。関数シグネチャにおけるKeccak-256(SHA-3)ハッシュの最初の4バイト(左から4バイトでビッグ・エンディアンの順序になっています)のことです
+                    - [solidity calldataとは](https://ethereum.stackexchange.com/questions/52989/what-is-calldata)
+                      - 関数の外部呼び出し、データがどこにストアされるか
+                        - Functions can be called internally, e.g. from within the contract, or externally. When a function's visibility is external, only external contracts can call that function.
+                          - When such an external call happens, the data of that call is stored in calldata.
+                      - read-only byte-addressable space アドレシング可能
+                        - 読み取り専用のバイトアドレシング可能空間
+  - approveとsetApprovalForAllの違い
+    - 「setApprovalForAllにより譲渡の許可がされているのであれば」「マーケットコントラクト上で煩わしいapproveは不要」という関係があると、Qiitaで説明を見かけたが、これは本当か?
+      - https://qiita.com/rmanzoku/items/a90f265ae499dc21b9cb
+    - ERC721の記載では、「approve」関数を実行するために「isApprovedForAll」による委譲をうけているオペレータであるかオーナーであることが必要という前提の記載があった
+      - しかし、setApprovalForAllで許可がされていれば、approveが必要ないというルールは正しいのか?
+
+- スマートコントラクトを作成したとき、NFTのトークンはどこにどんな状態？それはだれがきめるのか(ERC721がきめるのか?)
+  - たぶん、自分で設計するやつ。
+  - おそらく、スマートコントラクト作成時点では、まったくNFTトークンが発行されてない状態になると思う(コントラクト作成トランザクションを実行し、承認されない限りミント=鋳造してストレージに書き込むこともできないはず)
+    - ではいつ　NFTを発行するのか？そして、無限に発行するわけではないと思うがどのように制御するのか?
+      - この辺↓参考になるソースコードを探してみる
+      - いつ、NFTは作成されるのか
+        - 必要数分ミントして自分(もしくはそのスマコンアドレス)に紐付けて、自分(もしくはスマコン)が所有してる状態にする？
+        - そして、フロントエンドのアプリからJSON-RPC経由で転送を依頼する?
+        - 特定の条件を満たした場合だけ転送を承認する?
+        - 作成とは、鋳造のことか？
+      - 無限に作成できるのか?
+        - 無限発行はまずいと思う。というか、それを制御するロジックを設計する必要があるはず。どう有限化するか
+
+- とりあえず、サンプルに沿って「mintNFT」関数を実装した。これでNFTの発行ができそうだが、他にどのようなイベントが必要？
+  - この辺、自由に実装するやつか?
 
 ## 拡張機能インストール
 
@@ -114,59 +153,14 @@ npm install @openzeppelin/contracts
               - `event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);`
               - emits when an operator is enabled or disabled for an owner.
                   - The operator can manage all NFTs of the owner.
-    - @openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol
-      - abstract contract vs interface
-        - [abstract contracts](https://docs.soliditylang.org/en/v0.8.15/contracts.html#abstract-contracts)
-          - at least one of their functions is not implemented or when they do not provide arguments for all of their base contract constructors
-        - [interfaces](https://docs.soliditylang.org/en/v0.8.15/contracts.html#interfaces)
-          - cannot have any functions implemented. There are further restrictions
 
-## 課題
+## パッケージインストール
 
-- ERC721で実際どう実装すればいいのか、いまいち整理がついてない。
+```
+npm install --save-dev hardhat
+```
 
-  - safeTransferFromとtransferFromの違い
-  　- OpenZeppelinのコードを読んだ
-      - safeTransferFromの方は
-        - 転送先がコントラクト、かつ、トークンIERC721Receverインターフェースを実装してるコントラクトの場合
-          - トークンの転送を受理するか検査できる（拒否することもできる）
-            - onERC721Receivedという関数を実装し、トークン転送を受理するか検査
-              - この関数は、「function selector」を返す必要があるという仕様
-                - [function selectorとは](https://ethereum.stackexchange.com/questions/72363/what-is-a-function-selector)
-                - [function selectorとは2](https://y-nakajo.hatenablog.com/entry/2018/09/16/154612#Function-Selector)
-                  - function selector allows you to perform dynamic invocation of a function
-                  - 外部から関数を呼び出すときに、関数の実態を探し出し実行する処理のこと
-                  - Function Selectorはコンパイル後に生成されるopcodesの先頭に近い位置に配置されます
-                  - 関数呼び出し時のコールデータの最初の4バイトは呼び出す関数を指定しています。関数シグネチャにおけるKeccak-256(SHA-3)ハッシュの最初の4バイト(左から4バイトでビッグ・エンディアンの順序になっています)のことです
-                    - [solidity calldataとは](https://ethereum.stackexchange.com/questions/52989/what-is-calldata)
-                      - 関数の外部呼び出し、データがどこにストアされるか
-                        - Functions can be called internally, e.g. from within the contract, or externally. When a function's visibility is external, only external contracts can call that function.
-                          - When such an external call happens, the data of that call is stored in calldata.
-                      - read-only byte-addressable space アドレシング可能
-                        - 読み取り専用のバイトアドレシング可能空間
-                    - based on the name of the function and the type of each one of the input arguments.
-      - The ERC721 smart contract calls this function on the recipient after a IERC721.safeTransferFrom. 
-      , otherwise the caller will revert the transaction. The selector to be returned can be obtained as this.onERC721Received.selector. This function MAY throw to revert and reject the transfer. Note: the ERC721 contract address is always the message sender.
+```
+npm install @openzeppelin/contracts
+```
 
-  - approveとsetApprovalForAllの違い
-    - 「setApprovalForAllにより譲渡の許可がされているのであれば」「マーケットコントラクト上で煩わしいapproveは不要」という関係があると、Qiitaで説明を見かけたが、これは本当か?
-      - https://qiita.com/rmanzoku/items/a90f265ae499dc21b9cb
-    - ERC721の記載では、「approve」関数を実行するために「isApprovedForAll」による委譲をうけているオペレータであるかオーナーであることが必要という前提の記載があった
-      - しかし、setApprovalForAllで許可がされていれば、approveが必要ないというルールは正しいのか?
-
-- とりあえず、サンプルに沿って「mintNFT」関数を実装した。これでNFTの発行ができそうだが、他にどのようなイベントが必要？
-  - この辺、自由に実装するやつか?
-
-- そもそもスマートコントラクトを作成したとき、NFTのトークンはどこにどんな状態であるの？それはだれがきめるのか。ERC721がきめるのか?
-  - スマートコントラクトを作成したとき 
-    - NFTが存在している / NFTが存在していない
-      - NFTが存在している場合
-        - そのNFTは、ブロックチェーン上に保持されているのか / ブロックチェーン上に保持されていない
-          - 保持している場合
-            - だれが所有しているのか
-      - NFTが存在していない場合
-        - いつ、NFTは作成されるのか
-          - 作成とは、鋳造のことか？
-        - 無限に作成できるのか?
-          - 無限ではない場合
-            - 誰がどのように制限するのか?
