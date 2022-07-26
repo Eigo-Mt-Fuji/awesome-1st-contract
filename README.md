@@ -1,5 +1,49 @@
 # awesome-1st-contract
 
+## やりたいこと
+
+- 「都道府県NFT」を作り出すスマートコントラクトを開発する
+  - ダミーの「都道府県画像」を関連付けたNFTアート
+    - 都道府県画像は以下の東京都の画像とする
+      - ![img(./img/tokyo.png)]
+
+- スマートコントラクトはイーサリアムのERC721に準拠する
+  - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
+
+## 設計
+
+- ERC721に準拠した場合に設計・実装が必要な関数
+  - name関数, symbol関数, tokenURI関数は、ERC721で「metadata extension」として任意実装の扱い(OPTIONAL)とされているが,ここでは設計・実装の対象とする
+
+|コントラクト|関数|説明|
+|:-------:|:-------:|:-------:|
+|JapanPrefectureNft|balanceOf|指定したアドレス（オーナー）が所有するNFTの数を返す|
+||ownerOf|指定したトークン(NFT)のオーナーのアドレスを返す|
+||safeTransferFrom|トークン(NFT)をfrom->toに安全に転送する|
+||transferFrom|トークン(NFT)をfrom->toに転送する|
+||approve|_approvedアドレスのユーザへのトークン_tokenIdの受け渡しを承認する|
+||setApprovalForAll|_operatorアドレスをもつアカウントに全てのアセット管理を許可する|
+||getApproved|トークン_tokenIdの承認済みイーサリアムアドレスを返却する|
+||isApprovedForAll|オーナー_ownerから_operatorアドレスを持つユーザを承認済か否かを確認する|
+||name|このスマートコントラクトが定義するNFTの名前を返却する(シンプルでわかりやすい名前を返却する)|
+||symbol|このスマートコントラクトが定義するNFTのティッカーシンボルを返却する|
+||tokenURI|指定したトークン(NFT)のURIを返却する（URIは個別のトークン(NFT)ごとに異なる値が割り当てられることが必須）|
+
+- ERC721が定義する以下のイベントも、規格に準拠して、それぞれ対応する関数内で規格に準拠した適切なタイミングで呼び出す。
+  - Transfer
+      - `event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);`
+      - emits when NFTs are created (`from` == 0) and destroyed (`to` == 0). Exception: during contract creation, any number of NFTs may be created and assigned without emitting Transfer. At the time of any transfer, the approved address for that NFT (if any) is reset to none.
+
+  - Approval
+      - `event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);`
+      - emits when the approved address for an NFT is changed or reaffirmed.
+          - The zero address indicates there is no approved address.　When a Transfer event emits, this also indicates that the approved address for that NFT (if any) is reset to none.
+
+  - ApprovalForAll
+      - `event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);`
+      - emits when an operator is enabled or disabled for an owner.
+          - The operator can manage all NFTs of the owner.
+
 ## パッケージインストール
 
 ```
@@ -77,7 +121,7 @@ npm install @openzeppelin/contracts
         - [interfaces](https://docs.soliditylang.org/en/v0.8.15/contracts.html#interfaces)
           - cannot have any functions implemented. There are further restrictions
 
-## 備忘録
+## 課題
 
 - ERC721で実際どう実装すればいいのか、いまいち整理がついてない。
 
@@ -110,18 +154,19 @@ npm install @openzeppelin/contracts
     - ERC721の記載では、「approve」関数を実行するために「isApprovedForAll」による委譲をうけているオペレータであるかオーナーであることが必要という前提の記載があった
       - しかし、setApprovalForAllで許可がされていれば、approveが必要ないというルールは正しいのか?
 
-  - そもそもスマートコントラクトを作成したとき、NFTのトークンはどこにどんな状態であるの？それはだれがきめるのか。ERC721がきめるのか?
-    - スマートコントラクトを作成したとき 
-      - NFTが存在している / NFTが存在していない
-        - NFTが存在している場合
-          - そのNFTは、ブロックチェーン上に保持されているのか / ブロックチェーン上に保持されていない
-            - 保持している場合
-              - だれが所有しているのか
-        - NFTが存在していない場合
-          - いつ、NFTは作成されるのか
-            - 作成とは、鋳造のことか？
-          - 無限に作成できるのか?
-            - 無限ではない場合
-              - 誰がどのように制限するのか?
+- とりあえず、サンプルに沿って「mintNFT」関数を実装した。これでNFTの発行ができそうだが、他にどのようなイベントが必要？
+  - この辺、自由に実装するやつか?
 
-  - ユーザがトークンを入手するときはどうするの？ユーザはいつ、だれに、何の情報を添えて、何を依頼するの？「だれに」は、スマートコントラクトのイーサリアムアドレスだと思う
+- そもそもスマートコントラクトを作成したとき、NFTのトークンはどこにどんな状態であるの？それはだれがきめるのか。ERC721がきめるのか?
+  - スマートコントラクトを作成したとき 
+    - NFTが存在している / NFTが存在していない
+      - NFTが存在している場合
+        - そのNFTは、ブロックチェーン上に保持されているのか / ブロックチェーン上に保持されていない
+          - 保持している場合
+            - だれが所有しているのか
+      - NFTが存在していない場合
+        - いつ、NFTは作成されるのか
+          - 作成とは、鋳造のことか？
+        - 無限に作成できるのか?
+          - 無限ではない場合
+            - 誰がどのように制限するのか?
