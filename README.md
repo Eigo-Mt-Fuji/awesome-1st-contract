@@ -10,6 +10,12 @@
 - スマートコントラクトはイーサリアムのERC721に準拠する
   - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
 
+## アーキテクチャ構成
+
+`イーサリアムのスマートコントラクトのざっくりアーキテクチャ図。デプロイ(1)と実行(2)イメージを記載しています`
+
+![img](./img/architecture.png)
+
 ## 設計
 
 - ERC721に準拠した場合に設計・実装が必要な関数
