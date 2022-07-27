@@ -14,7 +14,7 @@
 
 `イーサリアムのスマートコントラクトのざっくりアーキテクチャ図。デプロイ(1)と実行(2)イメージを記載しています`
 
-![img](./img/architecture.png)
+[![img](./img/architecture.png)](https://app.diagrams.net/#G12iTgUSfFQxdgGMREiKIBD__cfnmEz6Gh)
 
 ## 設計
 
