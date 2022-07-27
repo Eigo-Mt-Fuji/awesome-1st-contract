@@ -20,10 +20,10 @@
 
 - 関連サイト
   - [ethereum.org - JSON-RPC API description](https://ethereum.org/en/developers/docs/apis/json-rpc/)
-  - [alchemy supernode](https://www.alchemy.com/supernode)
+  - [alchemy supernode - POWERING THE BEST IN BLOCKCHAIN](https://www.alchemy.com/supernode)
   - [chainlist.org - Ethereum Mainnet](https://chainlist.org/)
   - [hardhat - Ethereum development environment, Flexible. Extensible. Fast.](https://hardhat.org/)
-  - [web3.js](https://web3js.readthedocs.io/en/v1.2.11/index.html)
+  - [web3.js - Ethereum JavaScript API interact with a local or remote ethereum node](https://web3js.readthedocs.io/en/v1.2.11/index.html)
   - [metamask.io - crypto wallet and gateway to blockchain apps](https://metamask.io/)
   - [opensea.io - discover collect and sell extra ordinary NFTs](https://opensea.io/)
   - [etherscan.io - OpenSea's Smart Contract - ProxyRegistry](https://etherscan.io/address/0xa5409ec958c83c3f309868babaca7c86dcb077c1#code)
