@@ -2,13 +2,15 @@
 
 ## やりたいこと
 
-- 「都道府県NFT」を作り出すスマートコントラクトを開発する
+- イーサリアムについて学んでいて、実習がてらスマートコントラクト(スマコン)を開発したい。
+  - [note.com - イーサリアムを学ぶノート](https://note.com/efujikawa/m/m47203006ff7d)
+    - スマートコントラクトはイーサリアムのERC721に準拠する
+      - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
+
+- お題を考えた結果、とりあえず日本人らしく「都道府県NFT」を作り出すスマートコントラクト(スマコン)を開発することにした。
   - ダミーの「都道府県画像」を関連付けたNFTアート
     - 都道府県画像は以下の東京都の画像とする
       - ![img](./img/tokyo.png)
-
-- スマートコントラクトはイーサリアムのERC721に準拠する
-  - [ERC-721 NON-FUNGIBLE TOKEN STANDARD](https://eips.ethereum.org/EIPS/eip-721)
 
 ## アーキテクチャ構成
 
@@ -16,7 +18,7 @@
 
 [![img](./img/architecture.png)](https://app.diagrams.net/#G12iTgUSfFQxdgGMREiKIBD__cfnmEz6Gh)
 
--  関連サイト
+- 関連サイト
   - [ethereum.org - JSON-RPC API description](https://ethereum.org/en/developers/docs/apis/json-rpc/)
   - [alchemy supernode](https://www.alchemy.com/supernode)
   - [chainlist.org - Ethereum Mainnet](https://chainlist.org/)
@@ -26,7 +28,7 @@
   - [opensea.io - discover collect and sell extra ordinary NFTs](https://opensea.io/)
   - [etherscan.io - OpenSea's Smart Contract - ProxyRegistry](https://etherscan.io/address/0xa5409ec958c83c3f309868babaca7c86dcb077c1#code)
 
-## 設計
+## コントラクト設計
 
 - ERC721に準拠した場合に設計・実装が必要な関数
   - name関数, symbol関数, tokenURI関数は、ERC721で「metadata extension」として任意実装の扱い(OPTIONAL)とされているが,ここでは設計・実装の対象とする
