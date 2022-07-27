@@ -22,7 +22,7 @@
   - [ethereum.org - JSON-RPC API description](https://ethereum.org/en/developers/docs/apis/json-rpc/)
   - [alchemy supernode](https://www.alchemy.com/supernode)
   - [chainlist.org - Ethereum Mainnet](https://chainlist.org/)
-  - [hardhat](https://hardhat.org/)
+  - [hardhat - Ethereum development environment, Flexible. Extensible. Fast.](https://hardhat.org/)
   - [web3.js](https://web3js.readthedocs.io/en/v1.2.11/index.html)
   - [metamask.io - crypto wallet and gateway to blockchain apps](https://metamask.io/)
   - [opensea.io - discover collect and sell extra ordinary NFTs](https://opensea.io/)
